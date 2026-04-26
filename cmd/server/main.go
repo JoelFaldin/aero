@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -13,9 +12,18 @@ func basicHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", basicHandler)
 
-	fmt.Println("Server starting at http://localhost:8080!")
+	startPort := 8080
+	for port := startPort; port < startPort+10; port++ {
+		addr := fmt.Sprintf(":%d", port)
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal("error:", err)
+		fmt.Println("Server starting on port", port)
+
+		err := http.ListenAndServe(addr, nil)
+		if err == nil {
+			fmt.Printf("Server started off port %d!\n", port)
+			return
+		}
+
+		fmt.Printf("Port %d is occupied, trying next...\n", port)
 	}
 }
