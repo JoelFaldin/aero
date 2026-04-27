@@ -1,33 +1,17 @@
 package app
 
 import (
+	"aero/internal/balancer"
 	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"sync"
-	"sync/atomic"
 )
 
-type Balancer struct {
-	upstreams []string
-	current   atomic.Uint32
-}
-
-func (b *Balancer) Next() string {
-	var wg sync.WaitGroup
-
-	wg.Add(1)
-	n := b.current.Add(1)
-	wg.Done()
-
-	return b.upstreams[(int(n)-1)%len(b.upstreams)]
-}
-
 func Handler() {
-	b := &Balancer{
-		upstreams: []string{"http://localhost:8080", "http://localhost:8081", "http://localhost:8082"},
+	b := &balancer.Balancer{
+		Upstreams: []string{"http://localhost:8080", "http://localhost:8081", "http://localhost:8082"},
 	}
 
 	proxy := &httputil.ReverseProxy{}
