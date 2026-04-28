@@ -9,8 +9,13 @@ func basicHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "hello from the server!")
 }
 
+func healthChecker(_ http.ResponseWriter, _ *http.Request) {
+	fmt.Println("Alive!")
+}
+
 func main() {
 	http.HandleFunc("/", basicHandler)
+	http.HandleFunc("/health", healthChecker)
 
 	startPort := 8080
 	for port := startPort; port < startPort+10; port++ {

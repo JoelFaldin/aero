@@ -11,7 +11,11 @@ import (
 
 func Handler() {
 	b := &balancer.Balancer{
-		Upstreams: []string{"http://localhost:8080", "http://localhost:8081", "http://localhost:8082"},
+		Upstreams: []balancer.Upstream{
+			{Url: "http://localhost:8080"},
+			{Url: "http://localhost:8081"},
+			{Url: "http://localhost:8082"},
+		},
 	}
 
 	proxy := &httputil.ReverseProxy{}
@@ -21,6 +25,7 @@ func Handler() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		fmt.Println("server:", tr)
 
 		pr.SetURL(tr)
