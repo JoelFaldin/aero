@@ -32,6 +32,8 @@ func Handler() {
 		pr.SetXForwarded()
 	}
 
+	b.Ping(&b.Upstreams, 1)
+
 	fmt.Println("Start proxy server on :3000")
 	http.ListenAndServe(":3000", proxy)
 }
