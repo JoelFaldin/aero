@@ -2,6 +2,7 @@ package app
 
 import (
 	"aero/internal/balancer"
+	"aero/internal/print"
 	"fmt"
 	"log"
 	"net/http"
@@ -26,9 +27,7 @@ func Handler(verbose bool) {
 			log.Fatal(err)
 		}
 
-		if verbose {
-			fmt.Println("server:", tr)
-		}
+		print.Logger(fmt.Sprintf("server: %s", tr), verbose)
 
 		pr.SetURL(tr)
 		pr.SetXForwarded()

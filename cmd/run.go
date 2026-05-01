@@ -27,7 +27,6 @@ var runCmd = &cobra.Command{
 		} else {
 			app.Handler(false)
 		}
-
 	},
 }
 

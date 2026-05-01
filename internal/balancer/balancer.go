@@ -1,6 +1,7 @@
 package balancer
 
 import (
+	"aero/internal/print"
 	"fmt"
 	"net/http"
 	"sync/atomic"
@@ -38,9 +39,7 @@ func (b *Balancer) Ping(upstream *[]Upstream, interval time.Duration, verbose bo
 				if err != nil {
 					up.Active.Store(false)
 
-					if verbose {
-						fmt.Println("server", up.Url, "isnt active")
-					}
+					print.Logger(fmt.Sprint("server ", up.Url, " isnt active"), verbose)
 
 					continue
 				}
@@ -48,9 +47,7 @@ func (b *Balancer) Ping(upstream *[]Upstream, interval time.Duration, verbose bo
 				if res.Status != "200 OK" {
 					up.Active.Store(false)
 
-					if verbose {
-						fmt.Println("server", up.Url, "isnt active")
-					}
+					print.Logger(fmt.Sprint("server ", up.Url, " isnt active"), verbose)
 
 					continue
 				}
@@ -59,9 +56,7 @@ func (b *Balancer) Ping(upstream *[]Upstream, interval time.Duration, verbose bo
 
 				up.Active.Store(true)
 
-				if verbose {
-					fmt.Println("server", up.Url, "is active")
-				}
+				print.Logger(fmt.Sprint("server ", up.Url, " is active"), verbose)
 			}
 		}(&b.Upstreams[i])
 	}
