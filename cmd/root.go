@@ -1,10 +1,9 @@
 /*
-Copyright © 2026 Joel Faldín <joelfaldin@gmail.com>
+Copyright © 2026 Joel Faldín joelfaldin@gmail.com
 */
 package cmd
 
 import (
-	"aero/internal/app"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -13,18 +12,18 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "aero",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "A simple reverse proxy CLI tool made in go",
+	Long: `
+_aero_ is a CLI tool made in go.
+Created to practice (and learn)
+about proxies and reverse proxies.
+(Currently under construction!)
+`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) {
-		app.Handler()
-	},
+	// Run: func(cmd *cobra.Command, args []string) {
+	// 	app.Handler()
+	// },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
