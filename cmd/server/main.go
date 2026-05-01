@@ -9,8 +9,10 @@ func basicHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "hello from the server!")
 }
 
-func healthChecker(_ http.ResponseWriter, _ *http.Request) {
-	fmt.Println("Alive!")
+func healthChecker(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+
+	fmt.Fprintf(w, "Ok")
 }
 
 func main() {

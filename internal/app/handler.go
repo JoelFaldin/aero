@@ -3,7 +3,6 @@ package app
 import (
 	"aero/internal/balancer"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -21,10 +20,10 @@ func Handler() {
 	proxy := &httputil.ReverseProxy{}
 	proxy.Rewrite = func(pr *httputil.ProxyRequest) {
 		upstream := b.Next()
-		tr, err := url.Parse(upstream)
-		if err != nil {
-			log.Fatal(err)
-		}
+		tr, _ := url.Parse(upstream)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 
 		fmt.Println("server:", tr)
 
@@ -32,7 +31,7 @@ func Handler() {
 		pr.SetXForwarded()
 	}
 
-	b.Ping(&b.Upstreams, 1)
+	b.Ping(&b.Upstreams, 10)
 
 	fmt.Println("Start proxy server on :3000")
 	http.ListenAndServe(":3000", proxy)
