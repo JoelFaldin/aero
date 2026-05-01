@@ -1,6 +1,7 @@
 package balancer
 
 import (
+	"fmt"
 	"net/http"
 	"sync/atomic"
 	"time"
@@ -25,7 +26,7 @@ func (b *Balancer) Next() string {
 	return b.Upstreams[(int(n)-1)%len(b.Upstreams)].Url
 }
 
-func (b *Balancer) Ping(upstream *[]Upstream, interval time.Duration) {
+func (b *Balancer) Ping(upstream *[]Upstream, interval time.Duration, verbose bool) {
 	for i := range b.Upstreams {
 		go func(up *Upstream) {
 			tick := time.NewTicker(interval * time.Second)
@@ -36,20 +37,31 @@ func (b *Balancer) Ping(upstream *[]Upstream, interval time.Duration) {
 				res, err := client.Get(up.Url + "/health")
 				if err != nil {
 					up.Active.Store(false)
-					// fmt.Println("server", up.Url, "isnt active")
+
+					if verbose {
+						fmt.Println("server", up.Url, "isnt active")
+					}
+
 					continue
 				}
 
 				if res.Status != "200 OK" {
 					up.Active.Store(false)
-					// fmt.Println("server", up.Url, "isnt active")
+
+					if verbose {
+						fmt.Println("server", up.Url, "isnt active")
+					}
+
 					continue
 				}
 
 				res.Body.Close()
 
 				up.Active.Store(true)
-				// fmt.Println("server", up.Url, "is active")
+
+				if verbose {
+					fmt.Println("server", up.Url, "is active")
+				}
 			}
 		}(&b.Upstreams[i])
 	}

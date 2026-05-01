@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"aero/internal/app"
+	"fmt"
 
 	"github.com/spf13/cobra"
 )
@@ -16,20 +17,23 @@ var runCmd = &cobra.Command{
 	Long: `Start the basic functionality of the tool.
 	Remember to start the different go servers first!`,
 	Run: func(cmd *cobra.Command, args []string) {
-		app.Handler()
+		flag, err := cmd.Flags().GetBool("verbose")
+		if err != nil {
+			fmt.Println("error processing flag:", err)
+		}
+
+		if flag {
+			app.Handler(true)
+		} else {
+			app.Handler(false)
+		}
+
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(runCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// runCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// Local flags:
+	runCmd.Flags().Bool("verbose", false, "Add more output of the proxy for debugging.")
 }
