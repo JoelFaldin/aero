@@ -4,7 +4,6 @@ import (
 	"aero/internal/balancer"
 	"aero/internal/print"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -24,7 +23,7 @@ func Handler(verbose bool) {
 		upstream := b.Next()
 		tr, err := url.Parse(upstream)
 		if verbose && err != nil {
-			log.Fatal(err)
+			print.ErrorLogger(err)
 		}
 
 		print.Logger(fmt.Sprintf("server: %s", tr), verbose)
