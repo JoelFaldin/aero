@@ -36,6 +36,6 @@ func Handler(cf config.Config, verbose bool) {
 
 	b.Ping(b.Upstreams, time.Duration(cf.Proxy.HealthCheckInterval), verbose)
 
-	fmt.Println("Start proxy server on :3000")
+	fmt.Printf("Start proxy server on :%s\n", cf.Proxy.Port)
 	http.ListenAndServe(fmt.Sprintf(":%s", cf.Proxy.Port), proxy)
 }

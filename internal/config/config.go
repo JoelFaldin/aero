@@ -2,6 +2,7 @@ package config
 
 import (
 	"aero/internal/logger"
+	"log"
 	"os"
 
 	"go.yaml.in/yaml/v3"
@@ -32,6 +33,18 @@ func Load(path string, verbose bool) Config {
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
 		logger.ErrorLogger(err)
+	}
+
+	if config.Proxy.Port == "" {
+		config.Proxy.Port = "3000"
+	}
+
+	if config.Proxy.HealthCheckInterval == 0 {
+		config.Proxy.HealthCheckInterval = 10
+	}
+
+	if len(config.Upstreams) == 0 {
+		log.Panicf("Empty upstream array")
 	}
 
 	return config
