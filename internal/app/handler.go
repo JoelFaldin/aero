@@ -2,38 +2,40 @@ package app
 
 import (
 	"aero/internal/balancer"
-	"aero/internal/print"
+	"aero/internal/config"
+	"aero/internal/logger"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"time"
 )
 
-func Handler(verbose bool) {
-	b := &balancer.Balancer{
-		Upstreams: []balancer.Upstream{
-			{Url: "http://localhost:8080"},
-			{Url: "http://localhost:8081"},
-			{Url: "http://localhost:8082"},
-		},
+func Handler(cf config.Config, verbose bool) {
+	urls := make([]string, len(cf.Upstreams))
+
+	for i, u := range cf.Upstreams {
+		urls[i] = u.Url
 	}
+
+	b := balancer.NewBalancer(urls)
 
 	proxy := &httputil.ReverseProxy{}
 	proxy.Rewrite = func(pr *httputil.ProxyRequest) {
 		upstream := b.Next()
 		tr, err := url.Parse(upstream)
 		if verbose && err != nil {
-			print.ErrorLogger(err)
+			logger.ErrorLogger(err)
 		}
 
-		print.Logger(fmt.Sprintf("server: %s", tr), verbose)
+		logger.Logger(fmt.Sprintf("server: %s", tr), verbose)
 
 		pr.SetURL(tr)
 		pr.SetXForwarded()
 	}
 
-	b.Ping(&b.Upstreams, 10, verbose)
+	b.Ping(b.Upstreams, time.Duration(cf.Proxy.HealthCheckInterval), verbose)
 
 	fmt.Println("Start proxy server on :3000")
-	http.ListenAndServe(":3000", proxy)
+	http.ListenAndServe(fmt.Sprintf(":%s", cf.Proxy.Port), proxy)
 }

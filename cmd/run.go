@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"aero/internal/app"
+	"aero/internal/config"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -22,10 +23,13 @@ var runCmd = &cobra.Command{
 			fmt.Println("error processing flag:", err)
 		}
 
+		var cf config.Config
+		cf = config.Load("./config.yaml", flag)
+
 		if flag {
-			app.Handler(true)
+			app.Handler(cf, true)
 		} else {
-			app.Handler(false)
+			app.Handler(cf, false)
 		}
 	},
 }

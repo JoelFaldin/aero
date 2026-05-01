@@ -1,0 +1,8 @@
+proxy:
+  port: 3000
+  healthcheck_interval: 10
+
+upstreams:
+  - url: http://localhost:8080
+  - url: http://localhost:8081
+  - url: http://localhost:8082
