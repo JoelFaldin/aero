@@ -4,7 +4,10 @@ A simple `reverse proxy` CLI tool made in [Go](https://go.dev/).
 
 Created to practice (and learn) about proxies and reverse proxies.
 
-![aero](https://frutigeraeroarchive.org/images/introduction/asadal.jpg)
+<div align="center">
+  <img src="https://frutigeraeroarchive.org/images/introduction/asadal.jpg" width="400">
+</div>
+<!-- ![aero](https://frutigeraeroarchive.org/images/introduction/asadal.jpg) -->
 
 ## Project Structure
 
